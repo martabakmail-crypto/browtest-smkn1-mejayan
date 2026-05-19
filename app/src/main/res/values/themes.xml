@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.ExambrowTest" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:statusBarColor">@color/bg_top_bar</item>
+        <item name="android:navigationBarColor">@color/bg_top_bar</item>
+    </style>
+
+    <style name="Theme.ExambrowTest" parent="Base.Theme.ExambrowTest" />
+</resources>

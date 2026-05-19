@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM Professional - SMKN 1 Mejayan</title>
+    <!-- Favicon Icon -->
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-top: #0F172A;
+            --bg-bottom: #020617;
+            --text-main: #F8FAFC;
+            --text-sub: #94A3B8;
+            --primary-blue: #3B82F6;
+            --primary-hover: #2563EB;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --pill-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(12px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--card-border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-icon {
+            width: 22px; height: 22px;
+            background-color: var(--primary-blue);
+            color: #FFFFFF;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            color: var(--text-main);
+        }
+
+        /* Main Content Wrapper */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px 60px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Status Pill */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 36px;
+            box-shadow: var(--pill-shadow);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            background-color: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10B981;
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* Cartoon Illustration Container */
+        .illustration-box {
+            width: 140px; height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            filter: drop-shadow(0 12px 30px rgba(59, 130, 246, 0.35));
+            animation: floatIllustration 4s ease-in-out infinite;
+        }
+
+        .illustration-box img {
+            width: 100%; height: auto;
+            max-height: 140px;
+            object-fit: contain;
+        }
+
+        @keyframes floatIllustration {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.02); }
+        }
+
+        .header-logo {
+            height: 24px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Titles */
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            margin-bottom: 14px;
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            font-weight: 500;
+            max-width: 400px;
+        }
+
+        /* Feature Cards / Chips */
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            padding: 16px 26px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--pill-shadow);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            transition: all 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            background: rgba(45, 55, 72, 0.8);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-badge {
+            font-size: 18px;
+            display: inline-flex;
+        }
+
+        .feature-card.full-width {
+            width: auto;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        /* Action Button */
+        .btn-action {
+            width: 100%;
+            padding: 22px 28px;
+            background-color: var(--primary-blue);
+            color: #FFFFFF;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 14px 32px rgba(0, 132, 255, 0.35);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            letter-spacing: 0.5px;
+            margin-bottom: 28px;
+        }
+
+        .btn-action:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 132, 255, 0.45);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        .arrow-icon {
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn-action:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        /* Footer Note */
+        .footer-note {
+            font-size: 13px;
+            font-style: italic;
+            color: #94A3B8;
+            line-height: 1.6;
+            max-width: 320px;
+        }
+
+        /* Custom Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 40px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-logo {
+            width: 85px; height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 8px 16px rgba(0, 132, 255, 0.2));
+            animation: floatLogo 4s ease infinite;
+        }
+
+        .modal-title { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; }
+        .modal-text { color: var(--text-sub); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
+        .btn-modal-go {
+            width: 100%; padding: 18px;
+            background: var(--primary-blue);
+            color: #FFFFFF;
+            font-weight: 800; font-size: 16px;
+            border-radius: 100px; border: none;
+            cursor: pointer; transition: all 0.25s;
+            box-shadow: 0 10px 25px rgba(0, 132, 255, 0.3);
+        }
+        .btn-modal-go:hover { background: var(--primary-hover); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <!-- Top Sticky Header -->
+    <header class="top-header">
+        <img src="logo.png" alt="Logo SMKN 1 Mejayan" class="header-logo">
+        <div class="header-title">SIM PROFESSIONAL • SMKN 1 MEJAYAN</div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Status Pill -->
+        <div class="status-pill">
+            <div class="status-dot"></div>
+            <span>SECURE EXAM SYSTEM LIVE</span>
+        </div>
+
+        <!-- Cartoon Illustration -->
+        <div class="illustration-box">
+            <img src="exam_illustration.png" alt="Exam Illustration">
+        </div>
+
+        <!-- Title & Subtitle -->
+        <h1>SMKN 1 MEJAYAN</h1>
+        <p class="subtitle">Sistem Ujian &amp; Asesmen Digital Resmi Terintegrasi dengan Pengamanan Tingkat Tinggi</p>
+
+        <!-- Feature Chips Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="icon-badge">🛡️</span>
+                <span>Anti-Cheat</span>
+            </div>
+            <div class="feature-card">
+                <span class="icon-badge">⚡</span>
+                <span>Super Fast</span>
+            </div>
+            <div class="feature-card full-width">
+                <span class="icon-badge">🔒</span>
+                <span>SSL Verified</span>
+            </div>
+        </div>
+
+        <!-- Action CTA Button -->
+        <button class="btn-action" onclick="openExamModal()">
+            <span>MULAI UJIAN SEKARANG</span>
+            <span class="arrow-icon">→</span>
+        </button>
+
+        <!-- Footer Note -->
+        <p class="footer-note">Sistem Pengaman Ujian Digital Terintegrasi (Safe Asesmen Browser).</p>
+
+    </main>
+
+    <!-- Animated Modal for Confirmation & Redirect -->
+    <div class="modal-overlay" id="examModal">
+        <div class="modal-box">
+            <img src="logo.png" alt="Logo SMKN 1 Mejayan" class="modal-logo">
+            <div class="modal-title">Konfirmasi Sesi Ujian</div>
+            <div class="modal-text">Anda akan diarahkan ke Portal Ujian SIM Professional SMKN 1 Mejayan. Pastikan koneksi internet stabil.</div>
+            <button class="btn-modal-go" onclick="redirectToLogin()">Buka Portal Ujian →</button>
+        </div>
+    </div>
+
+    <script>
+        function openExamModal() {
+            document.getElementById('examModal').classList.add('active');
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'https://simproffesional.id/login';
+        }
+    </script>
+</body>
+</html>
