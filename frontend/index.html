@@ -120,32 +120,26 @@
             50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        /* Cartoon Illustration Container */
-        .illustration-box {
-            width: 140px; height: auto;
+        /* Transparent Logo Container */
+        .logo-box {
+            width: 130px; height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 12px 30px rgba(59, 130, 246, 0.35));
-            animation: floatIllustration 4s ease-in-out infinite;
+            margin-bottom: 28px;
+            filter: drop-shadow(0 12px 24px rgba(0, 132, 255, 0.25));
+            animation: floatLogo 4s ease-in-out infinite;
         }
 
-        .illustration-box img {
+        .logo-box img {
             width: 100%; height: auto;
-            max-height: 140px;
+            max-height: 130px;
             object-fit: contain;
         }
 
-        @keyframes floatIllustration {
+        @keyframes floatLogo {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-6px) scale(1.02); }
-        }
-
-        .header-logo {
-            height: 24px;
-            width: auto;
-            object-fit: contain;
+            50% { transform: translateY(-8px) scale(1.03); }
         }
 
         /* Titles */
@@ -324,7 +318,7 @@
 
     <!-- Top Sticky Header -->
     <header class="top-header">
-        <img src="logo.png" alt="Logo SMKN 1 Mejayan" class="header-logo">
+        <div class="header-icon">🛡️</div>
         <div class="header-title">SIM PROFESSIONAL • SMKN 1 MEJAYAN</div>
     </header>
 
@@ -337,9 +331,9 @@
             <span>SECURE EXAM SYSTEM LIVE</span>
         </div>
 
-        <!-- Cartoon Illustration -->
-        <div class="illustration-box">
-            <img src="exam_illustration.png" alt="Exam Illustration">
+        <!-- Transparent Floating Logo -->
+        <div class="logo-box">
+            <img src="logo.png" alt="Logo SMKN 1 Mejayan">
         </div>
 
         <!-- Title & Subtitle -->
