@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SIM Professional - SMKN 1 Mejayan</string>
+    <string name="app_name">Browtest SMKN 1 Mejayan</string>
     <string name="device_admin_label">Sistem Pengaman Ujian SMKN 1 Mejayan</string>
     <string name="device_admin_description">Sistem pengawas ujian digital terintegrasi untuk menjamin integritas dan keamanan pelaksanaan asesmen di SMKN 1 Mejayan.</string>
     <string name="enter_pin_title">Otorisasi Pengawas Ujian</string>
@@ -10,9 +10,9 @@
     <string name="btn_save">Simpan Perubahan</string>
     <string name="btn_cancel">Tutup</string>
     <string name="btn_exit">Keluar dari Ujian</string>
-    <string name="default_exam_url">https://martabakmail-crypto.github.io/browtest-smkn1-mejayan/</string>
+    <string name="default_exam_url">http://127.0.0.1:3000</string>
     <string name="wrong_pin">PIN Keamanan yang Anda masukkan tidak valid!</string>
-    <string name="kiosk_locked">🛡️ SIM Professional • Safe Exam System</string>
+    <string name="kiosk_locked">SIM Professional</string>
     <string name="wifi_connected">Koneksi Stabil</string>
     <string name="wifi_disconnected">Koneksi Terputus</string>
     <string name="exit_confirmation">Apakah Anda yakin ingin mengakhiri sesi pengawasan ujian ini?</string>

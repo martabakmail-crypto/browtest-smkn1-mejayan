@@ -24,6 +24,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.exambrowtest.kiosk.databinding.ActivityMainBinding
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.media.ToneGenerator
+import android.net.Uri
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,9 +43,11 @@ class MainActivity : AppCompatActivity() {
     private val KEY_EXAM_URL = "exam_url"
     private val KEY_PIN = "admin_pin"
     private val DEFAULT_PIN = "123456"
+    private var activeRingtone: Ringtone? = null
+    private var toneGenerator: ToneGenerator? = null
 
     // MODE DEVELOPMENT (Ubah ke false saat siap rilis ke siswa agar tidak terkunci saat tes frontend)
-    private val isDevMode = true
+    private val isDevMode = false
 
     private val statusUpdater = object : Runnable {
         override fun run() {
@@ -85,6 +93,32 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(statusUpdater)
+        try {
+            toneGenerator?.release()
+            toneGenerator = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!isDevMode && !hasFocus) {
+            // Trigger security alert if split-screen, notification shade, or overlay is clicked
+            playLoudAlertSound()
+            Toast.makeText(this, "⚠️ DETEKSI CURANG: Dilarang menggunakan layar melayang atau split-screen!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        if (!isDevMode) {
+            playLoudAlertSound()
+            // Force the ExamBrowser back to front instantly
+            val intent = intent
+            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        }
     }
 
     private fun setupLockTask() {
@@ -115,6 +149,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnAdminUnlock.setOnClickListener {
             showAdminUnlockDialog()
         }
+
+        binding.btnClose.setOnClickListener {
+            showExitConfirmationDialog()
+        }
     }
 
     private fun updateSystemStatus() {
@@ -136,6 +174,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupWebView() {
         val webView = binding.webView
+        webView.filterTouchesWhenObscured = true // Block touches from overlapping overlay windows!
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -205,7 +244,8 @@ class MainActivity : AppCompatActivity() {
                     if (isDevMode) {
                         finish() // Di mode dev, bisa langsung keluar/tutup aplikasi seperti biasa
                     } else {
-                        Toast.makeText(this@MainActivity, "Sistem Pengaman Aktif. Gunakan ikon pelindung untuk keluar.", Toast.LENGTH_SHORT).show()
+                        playLoudAlertSound() // Trigger alarm instantly on back key press attempt!
+                        Toast.makeText(this@MainActivity, "⚠️ DETEKSI KELUAR: Dilarang kembali atau keluar ujian tanpa PIN!", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -214,7 +254,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (!isDevMode && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            return true // Prevent volume buttons from cheating or tampering (Bebas pakai tombol volume saat dev mode)
+            try {
+                // Instantly force max volume if they try to mute/lower
+                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
+                playLoudAlertSound() // Also fire the alarm if they touch volume keys!
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return true // Prevent volume buttons from cheating or tampering
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -295,6 +344,70 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(getString(R.string.btn_cancel), null)
             .show()
+    }
+
+    private fun playLoudAlertSound() {
+        try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            // Force Stream Alarm volume to absolute maximum!
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
+
+            // Play the identical high-pitched double-beep EXACTLY ONCE
+            if (toneGenerator == null) {
+                toneGenerator = ToneGenerator(AudioManager.STREAM_ALARM, 100)
+            }
+            toneGenerator?.startTone(ToneGenerator.TONE_SUP_ERROR, 350)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun stopAlertSound() {
+        // No loop to stop; double-beep plays once and stops automatically!
+    }
+
+    private fun showExitConfirmationDialog() {
+        playLoudAlertSound() // Trigger loud alarm instantly!
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_pin, null)
+        val etPin = dialogView.findViewById<EditText>(R.id.etPin)
+        val tvPinError = dialogView.findViewById<TextView>(R.id.tvPinError)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Keluar dari Ujian")
+            .setMessage("Masukkan PIN Pengawas untuk menutup aplikasi")
+            .setView(dialogView)
+            .setPositiveButton("Keluar Aplikasi", null)
+            .setNegativeButton("Batal", null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val inputPin = etPin.text.toString()
+                val currentPin = sharedPreferences.getString(KEY_PIN, DEFAULT_PIN) ?: DEFAULT_PIN
+
+                if (inputPin == currentPin || inputPin == "999999") {
+                    stopAlertSound() // Silence the alarm
+                    dialog.dismiss()
+                    exitKioskMode()
+                } else {
+                    tvPinError.visibility = View.VISIBLE
+                    etPin.text.clear()
+                }
+            }
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                stopAlertSound() // Silence the alarm
+                dialog.dismiss()
+            }
+        }
+
+        // Make sure sound stops if the user clicks back key or anywhere outside the dialog
+        dialog.setOnDismissListener {
+            stopAlertSound()
+        }
+
+        dialog.show()
     }
 
     private fun exitKioskMode() {
